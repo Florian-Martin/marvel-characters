@@ -18,8 +18,8 @@ android {
 
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
-        buildConfigField("String", "API_PUBLIC_KEY", "\"${properties.getProperty("API_PUBLIC_KEY")}\"")
-        buildConfigField("String", "API_PRIVATE_KEY", "\"${properties.getProperty("API_PRIVATE_KEY")}\"")
+        buildConfigField("String", "API_PUBLIC_KEY", properties.getProperty("API_PUBLIC_KEY"))
+        buildConfigField("String", "API_PRIVATE_KEY", properties.getProperty("API_PRIVATE_KEY"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -45,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
