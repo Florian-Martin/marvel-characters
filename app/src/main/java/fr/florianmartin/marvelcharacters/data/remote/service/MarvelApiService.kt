@@ -7,15 +7,14 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import fr.florianmartin.marvelcharacters.BuildConfig
 import fr.florianmartin.marvelcharacters.data.remote.dto.MarvelApiResponseDTO
 import fr.florianmartin.marvelcharacters.data.remote.interceptor.MarveApilInterceptor
+import fr.florianmartin.marvelcharacters.utils.constants.BASE_URL
+import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_LIMIT
+import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_OFFSET
+import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_ORDER_BY
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-
-const val BASE_URL = "https://gateway.marvel.com"
-const val DEFAULT_ORDER_BY = "name"
-const val DEFAULT_LIMIT = 10
-const val DEFAULT_OFFSET = 10
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())

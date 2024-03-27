@@ -1,9 +1,6 @@
 package fr.florianmartin.marvelcharacters.data.remote.dto
 
-const val EMPTY_DESCRIPTION = "This character has no description"
-const val EMPTY_NAME = "This character has no name :o"
-const val EMPTY_FIELD = ""
-const val DEFAULT_ID = -1
+import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_FIELD
 
 data class MarvelApiResponseDTO(
     val etag: String = EMPTY_FIELD,

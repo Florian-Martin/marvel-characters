@@ -1,15 +1,14 @@
 package fr.florianmartin.marvelcharacters.data.remote.interceptor
 
+import fr.florianmartin.marvelcharacters.utils.constants.API_KEY
+import fr.florianmartin.marvelcharacters.utils.constants.HASH
+import fr.florianmartin.marvelcharacters.utils.constants.MD5
+import fr.florianmartin.marvelcharacters.utils.constants.TIMESTAMP
 import fr.florianmartin.marvelcharacters.utils.extenstions.hash
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import java.security.MessageDigest
-
-const val HASH = "hash"
-const val MD5 = "MD5"
-const val TIMESTAMP = "ts"
-const val API_KEY = "apikey"
 
 class MarveApilInterceptor(
     private val publicKey: String,
