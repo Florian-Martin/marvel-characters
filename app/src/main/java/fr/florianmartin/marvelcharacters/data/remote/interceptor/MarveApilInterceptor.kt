@@ -1,4 +1,4 @@
-package fr.florianmartin.marvelcharacters.data
+package fr.florianmartin.marvelcharacters.data.remote.interceptor
 
 import fr.florianmartin.marvelcharacters.utils.extenstions.hash
 import okhttp3.Interceptor
