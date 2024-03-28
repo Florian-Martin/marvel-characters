@@ -37,7 +37,7 @@ private val retrofit = Retrofit.Builder()
 
 interface MarvelApiService {
     @GET("/v1/public/characters")
-    fun getCharacters(
+    suspend fun getCharacters(
         @Query("orderBy") orderBy: String = DEFAULT_ORDER_BY,
         @Query("limit") limit: Int = DEFAULT_LIMIT,
         @Query("offset") offset: Int = DEFAULT_OFFSET

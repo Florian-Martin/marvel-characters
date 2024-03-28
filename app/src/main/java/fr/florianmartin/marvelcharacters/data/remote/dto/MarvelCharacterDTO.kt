@@ -18,7 +18,6 @@ data class MarvelCharacterDTO(
     val thumbnail: MarvelCharacterThumbnailDTO? = null,
 
     @Json(name = "modified")
-
     val modifiedOn: String = EMPTY_FIELD,
 
     val comics: MarvelCharacterComicsDTO? = null,
