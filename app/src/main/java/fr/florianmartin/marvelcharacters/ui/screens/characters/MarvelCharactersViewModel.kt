@@ -1,4 +1,4 @@
-package fr.florianmartin.marvelcharacters.ui.theme.screens.characters
+package fr.florianmartin.marvelcharacters.ui.screens.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

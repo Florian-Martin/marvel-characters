@@ -12,8 +12,8 @@ import fr.florianmartin.marvelcharacters.data.local.AppDatabase
 import fr.florianmartin.marvelcharacters.data.remote.service.MarvelApi
 import fr.florianmartin.marvelcharacters.data.repository.MarvelCharactersRepository
 import fr.florianmartin.marvelcharacters.ui.theme.MarvelCharactersTheme
-import fr.florianmartin.marvelcharacters.ui.theme.screens.characters.MarvelCharactersScreen
-import fr.florianmartin.marvelcharacters.ui.theme.screens.characters.MarvelCharactersViewModel
+import fr.florianmartin.marvelcharacters.ui.screens.characters.MarvelCharactersScreen
+import fr.florianmartin.marvelcharacters.ui.screens.characters.MarvelCharactersViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package fr.florianmartin.marvelcharacters.ui.theme.screens.characters
+package fr.florianmartin.marvelcharacters.ui.screens.characters
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility

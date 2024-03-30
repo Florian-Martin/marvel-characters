@@ -1,4 +1,4 @@
-package fr.florianmartin.marvelcharacters.ui.theme.screens
+package fr.florianmartin.marvelcharacters.ui.screens
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
