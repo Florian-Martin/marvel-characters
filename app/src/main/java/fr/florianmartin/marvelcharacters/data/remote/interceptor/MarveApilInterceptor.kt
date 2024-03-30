@@ -22,9 +22,9 @@ class MarveApilInterceptor(
 
         val timestamp = System.currentTimeMillis().toString()
 
-        val hash = "$TIMESTAMP$privateKey$publicKey".hash(md5)
+        val hash = "$timestamp$privateKey$publicKey".hash(md5)
 
-        val url = originalRequest.url().newBuilder()
+        val url = originalRequest.url.newBuilder()
             .addQueryParameter(TIMESTAMP, timestamp)
             .addQueryParameter(API_KEY, publicKey)
             .addQueryParameter(HASH, hash)

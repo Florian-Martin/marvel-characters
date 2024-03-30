@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">MarvelCharacters</string>
+    <string name="character_image">Character image</string>
+    <plurals name="appears_in_comics">
+        <item quantity="one">You can see me in %d comic!</item>
+        <item quantity="other">You can see me in %d comics!</item>
+    </plurals>
+    <string name="modified_on">Modified on %s</string>
+    <string name="loading_error">An error occurred :(</string>
+    <string name="try_again">Try again !</string>
+    <string name="expand_arrow">\"Expand arrow\"</string>
 </resources>
