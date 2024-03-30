@@ -51,7 +51,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import fr.florianmartin.marvelcharacters.R
 import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
-import fr.florianmartin.marvelcharacters.ui.theme.screens.ExpandableItemHeader
+import fr.florianmartin.marvelcharacters.ui.screens.ExpandableItemHeader
 import fr.florianmartin.marvelcharacters.utils.constants.CARD_EXPANSION_DURATION
 import fr.florianmartin.marvelcharacters.utils.constants.FIRE_EMOJI
 import fr.florianmartin.marvelcharacters.utils.extenstions.parseEmoji
