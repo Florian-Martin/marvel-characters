@@ -33,10 +33,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val windowSizeClass = calculateWindowSizeClass(this)
                     MarvelCharactersScreen(
                         viewModel = viewModel,
-                        windowSizeClass = windowSizeClass
+                        windowSizeClass = calculateWindowSizeClass(this)
                     )
                 }
             }
