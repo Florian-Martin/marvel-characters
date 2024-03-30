@@ -2,8 +2,6 @@ package fr.florianmartin.marvelcharacters.data.remote.service
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import fr.florianmartin.marvelcharacters.BuildConfig
 import fr.florianmartin.marvelcharacters.data.remote.dto.MarvelApiResponseDTO
 import fr.florianmartin.marvelcharacters.data.remote.interceptor.MarveApilInterceptor
@@ -13,6 +11,8 @@ import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_OFFSET
 import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_ORDER_BY
 import okhttp3.OkHttpClient
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 

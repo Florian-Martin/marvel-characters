@@ -24,7 +24,7 @@ class MarveApilInterceptor(
 
         val hash = "$timestamp$privateKey$publicKey".hash(md5)
 
-        val url = originalRequest.url().newBuilder()
+        val url = originalRequest.url.newBuilder()
             .addQueryParameter(TIMESTAMP, timestamp)
             .addQueryParameter(API_KEY, publicKey)
             .addQueryParameter(HASH, hash)

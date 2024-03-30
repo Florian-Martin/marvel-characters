@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MarvelCharacters</string>
+    <string name="character_image">Character image</string>
+    <string name="appears_in_comics">You can see me in %d comics !</string>
+    <string name="modified_on">Modified on %s</string>
+    <string name="loading_error">An error occured :(</string>
+    <string name="try_again">Try again !</string>
+    <string name="expand_arrow">\"Expand arrow\"</string>
 </resources>

@@ -1,4 +1,4 @@
-package fr.florianmartin.marvelcharacters.ui.theme.screens
+package fr.florianmartin.marvelcharacters.ui.theme.screens.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,12 +11,11 @@ class MarvelCharactersViewModel(repository: MarvelCharactersRepository) : ViewMo
     val characters = repository.characters.cachedIn(viewModelScope)
 
     companion object {
-        fun provideFactory(
-            repository: MarvelCharactersRepository
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                MarvelCharactersViewModel(repository) as T
-        }
+        fun providerFactory(repository: MarvelCharactersRepository): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    MarvelCharactersViewModel(repository) as T
+            }
     }
 }

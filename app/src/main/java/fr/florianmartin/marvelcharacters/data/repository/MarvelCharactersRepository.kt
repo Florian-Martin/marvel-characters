@@ -18,8 +18,15 @@ class MarvelCharactersRepository(
 ) {
     @OptIn(ExperimentalPagingApi::class)
     val characters: Flow<PagingData<MarvelCharacter>> = Pager(
-        config = PagingConfig(enablePlaceholders = false, pageSize = 10),
-        remoteMediator = MarvelCharactersRemoteMediator(marvelApiService, appDatabase)
+        config = PagingConfig(
+            enablePlaceholders = false,
+            pageSize = 20,
+            prefetchDistance = 5
+        ),
+        remoteMediator = MarvelCharactersRemoteMediator(
+            service = marvelApiService,
+            appDatabase = appDatabase
+        )
     ) {
         appDatabase.getMarvelCharactersDao().pagingSource()
     }.flow.map { pagingData ->

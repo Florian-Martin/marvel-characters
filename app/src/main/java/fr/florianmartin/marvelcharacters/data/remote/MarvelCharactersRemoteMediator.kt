@@ -21,17 +21,18 @@ class MarvelCharactersRemoteMediator(
     ): MediatorResult {
         try {
             val offset = when (loadType) {
-                LoadType.REFRESH -> null
+                LoadType.REFRESH -> 0
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val sum = state.pages.sumOf { it.data.size }
-                    if (sum == 0) {
-                        return MediatorResult.Success(endOfPaginationReached = true)
-                    } else {
-                        sum
-                    }
+                    state.pages.sumOf { it.data.size }
+//                    val loadedItems = state.pages.sumOf { it.data.size }
+//                    if (loadedItems == 0) {
+//                        return MediatorResult.Success(endOfPaginationReached = true)
+//                    } else {
+//                        loadedItems
+//                    }
                 }
-            } ?: 0
+            }
 
             val apiResponse = service.getCharacters(
                 limit = state.config.pageSize,
@@ -43,17 +44,15 @@ class MarvelCharactersRemoteMediator(
 
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    appDatabase.getMarvelCharactersDao().clearAll()
+                    appDatabase.getMarvelCharactersDao().deleteAll()
                 }
-                appDatabase.getMarvelCharactersDao().upsertAll(characters)
+                appDatabase.getMarvelCharactersDao().insertAll(characters)
             }
 
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: Exception) {
+            e.printStackTrace()
             return MediatorResult.Error(e)
         }
     }
 }
-
-
-
