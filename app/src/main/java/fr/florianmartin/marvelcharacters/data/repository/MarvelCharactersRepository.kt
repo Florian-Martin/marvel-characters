@@ -20,7 +20,7 @@ class MarvelCharactersRepository(
     val characters: Flow<PagingData<MarvelCharacter>> = Pager(
         config = PagingConfig(
             enablePlaceholders = false,
-            pageSize = 20,
+            pageSize = 40,
             prefetchDistance = 5
         ),
         remoteMediator = MarvelCharactersRemoteMediator(

@@ -1,5 +1,6 @@
 package fr.florianmartin.marvelcharacters.ui.screens.characters
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -21,12 +22,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,7 +62,10 @@ import fr.florianmartin.marvelcharacters.utils.constants.FIRE_EMOJI
 import fr.florianmartin.marvelcharacters.utils.extenstions.parseEmoji
 
 @Composable
-fun MarvelCharactersScreen(viewModel: MarvelCharactersViewModel) {
+fun MarvelCharactersScreen(
+    viewModel: MarvelCharactersViewModel,
+    windowSizeClass: WindowSizeClass
+) {
     val context = LocalContext.current
     val characters = viewModel.characters.collectAsLazyPagingItems()
 
@@ -71,23 +79,56 @@ fun MarvelCharactersScreen(viewModel: MarvelCharactersViewModel) {
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    ) {
         if (characters.loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(characters.itemCount) { index ->
-                    characters[index]?.let { MarvelCharacter(character = it) }
+            when (windowSizeClass.widthSizeClass) {
+                WindowWidthSizeClass.Compact -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        items(characters.itemCount) { index ->
+                            characters[index]?.let {
+                                MarvelCharacter(character = it)
+                            }
+                        }
+                        item {
+                            when (characters.loadState.append) {
+                                is LoadState.Error -> LoadingError(characters)
+                                LoadState.Loading -> CircularProgressIndicator()
+                                is LoadState.NotLoading -> {}
+                            }
+                        }
+                    }
                 }
-                item {
-                    when (characters.loadState.append) {
-                        is LoadState.Error -> LoadingError(characters)
-                        LoadState.Loading -> CircularProgressIndicator()
-                        is LoadState.NotLoading -> {}
+
+                WindowWidthSizeClass.Medium,
+                WindowWidthSizeClass.Expanded -> {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(characters.itemCount) { index ->
+                            characters[index]?.let {
+                                MarvelCharacter(character = it)
+                            }
+                        }
+                        item {
+                            when (characters.loadState.append) {
+                                is LoadState.Error -> LoadingError(characters)
+                                LoadState.Loading -> CircularProgressIndicator()
+                                is LoadState.NotLoading -> {}
+                            }
+                        }
                     }
                 }
             }
@@ -98,21 +139,22 @@ fun MarvelCharactersScreen(viewModel: MarvelCharactersViewModel) {
 @Composable
 fun LoadingError(characters: LazyPagingItems<MarvelCharacter>) {
     Column {
-        Text(text = stringResource(id = R.string.loading_error))
+        Text(text = stringResource(R.string.loading_error))
         Button(
             onClick = { characters.retry() },
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.try_again),
+                text = stringResource(R.string.try_again),
                 color = White
             )
         }
     }
 }
 
+@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
-fun MarvelCharacter(character: MarvelCharacter) {
+fun MarvelCharacter(character: MarvelCharacter, modifier: Modifier = Modifier) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val transitionState = remember {
@@ -138,12 +180,7 @@ fun MarvelCharacter(character: MarvelCharacter) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = cardElevation),
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = 24.dp,
-                vertical = 8.dp
-            ),
+        modifier = modifier.fillMaxWidth(),
         onClick = { expanded = !expanded }
     ) {
         Column {
@@ -209,10 +246,11 @@ fun ExpandableItemContent(
             )
             Spacer(modifier = Modifier.heightIn(15.dp))
             Text(
-                text = (stringResource(
-                    R.string.appears_in_comics,
+                text = LocalContext.current.resources.getQuantityString(
+                    R.plurals.appears_in_comics,
+                    character.appearancesInComics,
                     character.appearancesInComics
-                ) + FIRE_EMOJI.parseEmoji()),
+                ) + FIRE_EMOJI.parseEmoji(),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis
             )
