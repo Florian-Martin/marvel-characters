@@ -1,35 +1,64 @@
 package fr.florianmartin.marvelcharacters.data.repository
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.map
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import fr.florianmartin.marvelcharacters.data.local.AppDatabase
 import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
-import fr.florianmartin.marvelcharacters.data.remote.MarvelCharactersRemoteMediator
 import fr.florianmartin.marvelcharacters.data.remote.service.MarvelApiService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+
 
 class MarvelCharactersRepository(
     private val appDatabase: AppDatabase,
-    marvelApiService: MarvelApiService
+    private val marvelApiService: MarvelApiService
 ) {
-    @OptIn(ExperimentalPagingApi::class)
-    val characters: Flow<PagingData<MarvelCharacter>> = Pager(
-        config = PagingConfig(
-            enablePlaceholders = false,
-            pageSize = 40,
-            prefetchDistance = 5
-        ),
-        remoteMediator = MarvelCharactersRemoteMediator(
-            service = marvelApiService,
-            appDatabase = appDatabase
-        )
-    ) {
-        appDatabase.getMarvelCharactersDao().pagingSource()
-    }.flow.map { pagingData ->
-        pagingData.map { it.asModel() }
+    suspend fun getCharacters(loadSize: Int, offset: Int? = null): List<MarvelCharacter> {
+        return try {
+            val response = marvelApiService.getCharacters(
+                limit = loadSize,
+                offset = offset ?: 0
+            )
+
+            if (response.code() == 200) {
+                val body = response.body()
+                val newEtag = body?.etag
+                body?.data?.results?.let {
+                    val entities = it.map { characterDTO ->
+                        characterDTO.asEntity().apply { this.etag = newEtag }
+                    }
+                    appDatabase.getMarvelCharactersDao().insertAll(entities)
+                    entities.map { entity ->
+                        entity.asModel()
+                    }
+                } ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
     }
+}
+
+class CharactersPagingSource(private val repository: MarvelCharactersRepository) :
+    PagingSource<Int, MarvelCharacter>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MarvelCharacter> {
+        return try {
+            val offset = params.key ?: 0
+            val data = repository.getCharacters(params.loadSize, offset)
+            LoadResult.Page(
+                data = data,
+                prevKey = if (offset == 0) null else offset - params.loadSize,
+                nextKey = if (data.isEmpty()) null else offset + params.loadSize
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, MarvelCharacter>): Int? =
+        state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
 }

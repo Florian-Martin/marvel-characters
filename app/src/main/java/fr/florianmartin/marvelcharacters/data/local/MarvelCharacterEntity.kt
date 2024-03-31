@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
+import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_FIELD
 
 @Entity(tableName = "character")
 data class MarvelCharacterEntity(
@@ -22,6 +23,8 @@ data class MarvelCharacterEntity(
 
     @ColumnInfo(name = "appearances_in_comics")
     val appearancesInComics: Int,
+
+    var etag: String? = null
 ) {
     fun asModel() = MarvelCharacter(
         id = id,
