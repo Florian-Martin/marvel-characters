@@ -5,9 +5,14 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.florianmartin.marvelcharacters.data.local.AppDatabase
+import fr.florianmartin.marvelcharacters.data.local.DataStoreManager
 import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
 import fr.florianmartin.marvelcharacters.data.remote.service.MarvelApiService
 import fr.florianmartin.marvelcharacters.utils.NetworkUtils
+import fr.florianmartin.marvelcharacters.utils.constants.DATABASE_REFRESH_AFTER
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 private const val TAG = "MarvelCharactersRepository"
@@ -15,6 +20,8 @@ private const val TAG = "MarvelCharactersRepository"
 class MarvelCharactersRepository(
     private val appDatabase: AppDatabase,
     private val marvelApiService: MarvelApiService,
+    private val datastoreManager: DataStoreManager,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val context: Context
 ) {
     suspend fun getCharacters(
@@ -37,6 +44,12 @@ class MarvelCharactersRepository(
                 200 -> {
                     val body = response.body()
                     body?.data?.results?.let {
+                        if (offset == 0 && shouldRefreshDatabase()) {
+                            withContext(dispatcher) {
+                                appDatabase.getMarvelCharactersDao().deleteAll()
+                            }
+                        }
+                        datastoreManager.saveLastApiFetchTimestamp(System.currentTimeMillis())
                         val entities = it.map { characterDTO ->
                             characterDTO.asEntity()
                         }
@@ -57,6 +70,12 @@ class MarvelCharactersRepository(
             Log.e(TAG, "in / out exception")
             throw IOException("An unexpected error occurred")
         }
+    }
+
+    private suspend fun shouldRefreshDatabase(): Boolean {
+        return datastoreManager.getLastFetchTimestamp()?.let {
+            System.currentTimeMillis() - it > DATABASE_REFRESH_AFTER
+        } ?: false
     }
 }
 
