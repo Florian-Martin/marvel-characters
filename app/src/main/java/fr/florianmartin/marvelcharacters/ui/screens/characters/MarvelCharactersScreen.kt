@@ -66,18 +66,7 @@ fun MarvelCharactersScreen(
     viewModel: MarvelCharactersViewModel,
     windowSizeClass: WindowSizeClass
 ) {
-    val context = LocalContext.current
     val characters = viewModel.characters.collectAsLazyPagingItems()
-
-    LaunchedEffect(key1 = characters.loadState) {
-        if (characters.loadState.refresh is LoadState.Error) {
-            Toast.makeText(
-                context,
-                "Error: " + (characters.loadState.refresh as LoadState.Error).error.message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
 
     Box(
         modifier = Modifier
@@ -103,7 +92,11 @@ fun MarvelCharactersScreen(
                             when (characters.loadState.append) {
                                 is LoadState.Error -> LoadingError(characters)
                                 LoadState.Loading -> CircularProgressIndicator()
-                                is LoadState.NotLoading -> {}
+                                is LoadState.NotLoading -> {
+                                    if (!characters.loadState.append.endOfPaginationReached) {
+                                        LoadingError(characters)
+                                    }
+                                }
                             }
                         }
                     }

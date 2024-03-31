@@ -4,13 +4,16 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
+import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_ID
 import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_FIELD
 
 @Entity(tableName = "character")
 data class MarvelCharacterEntity(
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+
+    val marvelId: Int = DEFAULT_ID,
 
     val name: String,
 

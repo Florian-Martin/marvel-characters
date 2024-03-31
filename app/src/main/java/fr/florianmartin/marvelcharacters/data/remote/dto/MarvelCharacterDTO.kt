@@ -27,7 +27,7 @@ data class MarvelCharacterDTO(
     val urls: List<MarvelCharacterUrlDTO> = emptyList(),
 ) {
     fun asEntity() = MarvelCharacterEntity(
-        id = id,
+        marvelId = id,
         name = name,
         description = description.ifEmpty { EMPTY_DESCRIPTION },
         thumbnail = thumbnail?.let {

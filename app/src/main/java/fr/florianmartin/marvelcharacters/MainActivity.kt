@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import fr.florianmartin.marvelcharacters.data.local.AppDatabase
 import fr.florianmartin.marvelcharacters.data.remote.service.MarvelApi
 import fr.florianmartin.marvelcharacters.data.repository.MarvelCharactersRepository
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         val viewModel: MarvelCharactersViewModel by viewModels {
             val appDatabase = AppDatabase.getAppDatabase(application)
             val marvelApiService = MarvelApi.retrofitService
-            val repository = MarvelCharactersRepository(appDatabase, marvelApiService)
+            val repository = MarvelCharactersRepository(appDatabase, marvelApiService, this)
             MarvelCharactersViewModel.providerFactory(repository)
         }
         setContent {
