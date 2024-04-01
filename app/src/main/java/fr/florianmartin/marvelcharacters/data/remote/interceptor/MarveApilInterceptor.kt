@@ -4,7 +4,7 @@ import fr.florianmartin.marvelcharacters.utils.constants.API_KEY
 import fr.florianmartin.marvelcharacters.utils.constants.HASH
 import fr.florianmartin.marvelcharacters.utils.constants.MD5
 import fr.florianmartin.marvelcharacters.utils.constants.TIMESTAMP
-import fr.florianmartin.marvelcharacters.utils.extenstions.hash
+import fr.florianmartin.marvelcharacters.utils.extensions.hash
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

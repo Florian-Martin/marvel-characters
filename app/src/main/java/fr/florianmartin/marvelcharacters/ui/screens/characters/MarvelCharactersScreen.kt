@@ -1,7 +1,6 @@
 package fr.florianmartin.marvelcharacters.ui.screens.characters
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateDp
@@ -33,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,7 +57,8 @@ import fr.florianmartin.marvelcharacters.data.model.MarvelCharacter
 import fr.florianmartin.marvelcharacters.ui.screens.ExpandableItemHeader
 import fr.florianmartin.marvelcharacters.utils.constants.CARD_EXPANSION_DURATION
 import fr.florianmartin.marvelcharacters.utils.constants.FIRE_EMOJI
-import fr.florianmartin.marvelcharacters.utils.extenstions.parseEmoji
+import fr.florianmartin.marvelcharacters.utils.extensions.LoggerImpl
+import fr.florianmartin.marvelcharacters.utils.extensions.parseEmoji
 
 @Composable
 fun MarvelCharactersScreen(
@@ -243,7 +242,7 @@ fun ExpandableItemContent(
                     R.plurals.appears_in_comics,
                     character.appearancesInComics,
                     character.appearancesInComics
-                ) + FIRE_EMOJI.parseEmoji(),
+                ) + FIRE_EMOJI.parseEmoji(LoggerImpl),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis
             )
