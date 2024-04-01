@@ -13,6 +13,7 @@ import fr.florianmartin.marvelcharacters.utils.constants.DATABASE_REFRESH_AFTER
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import java.io.IOException
 
 private const val TAG = "MarvelCharactersRepository"
@@ -34,8 +35,8 @@ class MarvelCharactersRepository(
         }
 
         return try {
-
             val response = marvelApiService.getCharacters(
+                etag = datastoreManager.getEtag(),
                 limit = limit,
                 offset = offset ?: 0
             )
@@ -43,13 +44,20 @@ class MarvelCharactersRepository(
             when (response.code()) {
                 200 -> {
                     val body = response.body()
+                    val newEtag = body?.etag
                     body?.data?.results?.let {
                         if (offset == 0 && shouldRefreshDatabase()) {
                             withContext(dispatcher) {
                                 appDatabase.getMarvelCharactersDao().deleteAll()
                             }
                         }
-                        datastoreManager.saveLastApiFetchTimestamp(System.currentTimeMillis())
+                        with(datastoreManager) {
+                            saveLastApiFetchTimestamp(System.currentTimeMillis())
+                            newEtag?.let { etag ->
+                                saveEtag(etag)
+                            }
+                        }
+
                         val entities = it.map { characterDTO ->
                             characterDTO.asEntity()
                         }
@@ -61,10 +69,16 @@ class MarvelCharactersRepository(
                 }
 
                 304 -> {
-                    emptyList()
+                    return appDatabase.getMarvelCharactersDao().getCharacters(limit = limit)
+                        .map { it.asModel() }
                 }
 
-                else -> throw retrofit2.HttpException(response)
+                401, 403, 405, 409 -> {
+                    Log.e("***", response.message())
+                    throw HttpException(response)
+                }
+
+                else -> throw HttpException(response)
             }
         } catch (e: Exception) {
             Log.e(TAG, "in / out exception")
