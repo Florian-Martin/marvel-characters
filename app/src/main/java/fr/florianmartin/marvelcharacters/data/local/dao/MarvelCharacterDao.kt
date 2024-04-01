@@ -31,5 +31,4 @@ interface MarvelCharacterDao {
 
     @Query("DELETE FROM character")
     suspend fun deleteAll()
-
 }

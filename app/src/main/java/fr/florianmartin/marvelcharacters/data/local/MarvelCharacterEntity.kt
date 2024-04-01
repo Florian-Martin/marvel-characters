@@ -25,9 +25,7 @@ data class MarvelCharacterEntity(
     val modifiedOn: String,
 
     @ColumnInfo(name = "appearances_in_comics")
-    val appearancesInComics: Int,
-
-    var etag: String? = null
+    val appearancesInComics: Int
 ) {
     fun asModel() = MarvelCharacter(
         id = id,
