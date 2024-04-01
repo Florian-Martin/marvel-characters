@@ -1,6 +1,8 @@
 package fr.florianmartin.marvelcharacters.utils.extenstions
 
+import android.util.Log
 import java.security.MessageDigest
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -14,8 +16,11 @@ fun String.formatDate(): String? {
     val newFormat = SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss", Locale.getDefault())
     return try {
         originalFormat.parse(this)?.let { newFormat.format(it) }
+    } catch (e: ParseException) {
+        Log.e("DateConversion", "Failed to parse date: $this")
+        null
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("DateConversion", "Unexpected error during date conversion")
         null
     }
 }
@@ -24,8 +29,11 @@ fun String.parseEmoji(): String? {
     return try {
         val codePoint = this.removePrefix("U+").toInt(16)
         String(Character.toChars(codePoint))
+    } catch (e: ParseException) {
+        Log.e("EmojiParsing", "Failed to parse emoji: $this")
+        null
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("EmojiParsing", "Unexpected error during emoji parsing")
         null
     }
 }

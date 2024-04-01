@@ -19,6 +19,16 @@ interface MarvelCharacterDao {
     )
     fun pagingSource(): PagingSource<Int, MarvelCharacterEntity>
 
+    @Query(
+        "SELECT * FROM character " +
+                "LIMIT :limit " +
+                "OFFSET :offset"
+    )
+    suspend fun getCharacters(
+        limit: Int = 50,
+        offset: Int = 0
+    ): List<MarvelCharacterEntity>
+
     @Query("DELETE FROM character")
     suspend fun deleteAll()
 
