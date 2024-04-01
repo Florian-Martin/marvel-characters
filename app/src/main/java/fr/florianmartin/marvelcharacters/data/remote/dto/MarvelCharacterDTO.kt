@@ -6,8 +6,9 @@ import fr.florianmartin.marvelcharacters.utils.constants.DEFAULT_ID
 import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_DESCRIPTION
 import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_FIELD
 import fr.florianmartin.marvelcharacters.utils.constants.EMPTY_NAME
-import fr.florianmartin.marvelcharacters.utils.extenstions.formatDate
-import fr.florianmartin.marvelcharacters.utils.extenstions.httpToHttps
+import fr.florianmartin.marvelcharacters.utils.extensions.LoggerImpl
+import fr.florianmartin.marvelcharacters.utils.extensions.formatDate
+import fr.florianmartin.marvelcharacters.utils.extensions.httpToHttps
 
 data class MarvelCharacterDTO(
 
@@ -33,7 +34,7 @@ data class MarvelCharacterDTO(
         thumbnail = thumbnail?.let {
             "${it.path}.${it.extension}"
         }?.httpToHttps() ?: EMPTY_FIELD,
-        modifiedOn = modifiedOn.formatDate() ?: EMPTY_FIELD,
+        modifiedOn = modifiedOn.formatDate(LoggerImpl) ?: EMPTY_FIELD,
         appearancesInComics = comics?.available ?: 0,
     )
 }
